@@ -1,0 +1,194 @@
+import React, { useState } from "react";
+import { addUser } from '../store/thunks/addUser'
+import UserDetail from "../types/User";
+import { useThunk } from "../hooks/use-thunk";
+import { useNavigate } from "react-router-dom";
+import { Typography,FormHelperText,FormControl,FormLabel ,Input,Textarea,Button} from "@mui/joy";
+import { fetchUsers } from "../store/thunks/fetchUsers";
+
+
+
+function UserForm(){
+  const navigate=useNavigate();
+
+    const [doAddUser,isAddingUser,addUserError]=useThunk(addUser)
+
+    const [doFetchUsers]=useThunk(fetchUsers)
+    const [formData,setFormData]=useState<UserDetail >({
+        name:'',
+        email:'',
+        occupation:'',
+        dob:'',
+        address:''
+    })
+    const [error,setError]=useState<{[hey:string]:string}>({})
+    const validate=()=>{
+      const newErrors:{[key:string]:string}={};
+      if(!formData.name.trim()) newErrors.name="Name is required";
+        else if(formData.name.length<3) newErrors.name="Name must be at least 3 characters";
+        else if(formData.name[0]!==formData.name[0].toUpperCase()) newErrors.name='The First Letter should be Capital'
+      if(!formData.email.trim()) newErrors.email="Email is required";
+        else if(!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email="Invalid Email Format";
+      if(!formData.occupation.trim()) newErrors.occupation="Occupation is required";
+        else if(formData.occupation.length<3) newErrors.occupation="Occupation must be at least 3 characters";
+        else if(formData.occupation[0]!==formData.occupation[0].toUpperCase()) newErrors.occupation='The First Letter should be Capital'
+      if(!formData.dob.trim()) newErrors.dob="Date of Birth is required";
+      else if (new Date(formData.dob) > new Date()) newErrors.dob="Date of Birth cannot be in the future";
+      else if(calculateAge(formData.dob)<18) newErrors.dob="Age must be at least 18 years";
+      else if(calculateAge(formData.dob)>120) newErrors.dob="Age must be less than 120 years";  
+      if(!formData.address.trim()) newErrors.address="Address is required";
+
+      return newErrors;
+      
+    }
+    function calculateAge(dob:string):number {
+      const birth = new Date(dob);
+      const today = new Date();
+      let age = today.getFullYear() - birth.getFullYear();
+      const monthDiff = today.getMonth() - birth.getMonth();
+      if(monthDiff<0 || (monthDiff===0 && today.getDate()<birth.getDate())){
+        age--;
+      }
+      return age;
+    } 
+
+
+    const handleChange=(event:React.ChangeEvent<HTMLInputElement|HTMLTextAreaElement>)=>{
+        const {name,value}=event.target
+        setFormData(prev=>({
+            ...prev,
+            [name]:value
+        }))
+ 
+    }
+
+
+const handleSubmit =async (e: React.FormEvent) => {
+    e.preventDefault();
+
+const validationErrors = validate();
+if(Object.keys(validationErrors).length > 0){
+  setError(validationErrors);
+  return;
+}
+setError({});
+        await doAddUser({
+          ...formData,
+          age: calculateAge(formData.dob)  
+        });
+         await doFetchUsers();
+        setFormData({ name: '', email: '', occupation:'',dob:'',address:''}); 
+        navigate('/users');
+
+};      
+
+const tempp=<>
+<div>
+     
+
+    <div>Please Enter Your Details</div>
+    <div>
+    <form onSubmit={handleSubmit} >
+ 
+<FormControl error={!!error.name}>
+  <FormLabel sx={{fontWeight:'bold'}}>NAME</FormLabel>
+  <Input
+    type="text"
+    placeholder="Name"
+    name="name"
+    value={formData.name}
+    onChange={handleChange}
+  />
+  {error.name&&<FormHelperText>{error.name}</FormHelperText>}
+</FormControl>
+       <FormControl error={!!error.email} required>
+  <FormLabel sx={{fontWeight:'bold'}}>EMAIL</FormLabel>
+  <Input
+    name="email"
+    type="email"
+    placeholder="Abc@email.com"
+    value={formData.email}
+    onChange={handleChange}
+    required
+  />
+  <FormHelperText> 
+    {error.email }
+  </FormHelperText>
+</FormControl>
+<FormControl error={!!error.dob}>
+    <FormLabel sx={{fontWeight:'bold'}}>DATE OF BIRTH</FormLabel>    
+    <Input
+        name="dob"
+        value={formData.dob}
+        onChange={handleChange}
+        type="date"
+        placeholder="Date of Birth"
+        slotProps={{
+          input:{
+             max:new Date().toISOString().split("T")[0]
+          }
+        }}
+      />
+{error.dob && <FormHelperText>{error.dob}</FormHelperText>}
+</FormControl>
+<FormControl error={!!error.occupation}>
+<FormLabel sx={{fontWeight:'bold'}}>OCCUPATION</FormLabel>
+<Input
+        type="text"
+          placeholder="Occupation"
+          name="occupation"
+          value={formData.occupation}
+          onChange={handleChange}
+          required
+/>
+{error.occupation&&<FormHelperText>{error.occupation}</FormHelperText>}
+  {!error.occupation && (
+    <FormHelperText>
+      Enter 'Not working' if you are not working.
+    </FormHelperText>
+  )}
+</FormControl>
+
+<FormControl error={!!error.address}>
+  <FormLabel sx={{fontWeight:'bold'}}>ADDRESS</FormLabel>
+  <Textarea
+    placeholder="Enter full address"
+    minRows={3}
+    name="address"
+    value={formData.address}
+    onChange={handleChange}
+  />
+  {error.address && <FormHelperText>{error.address}</FormHelperText>}
+</FormControl>
+<FormControl></FormControl>
+        <Button onClick={handleSubmit} variant="solid">Submit</Button>
+        </form>
+    </div>
+</div></>
+
+  let content;
+  if (isAddingUser) {
+    content = <div>Loading</div>
+  } else if (addUserError) {
+    content = <div>Error Adding User Details...</div>;
+  } else {
+    content = tempp
+  }
+
+
+return <div>
+   <Typography level="h2" component="h1"
+      sx={{
+        justifyContent: 'center',
+        display: 'flex',
+        mb: 4,
+        fontSize: '2rem',
+        fontWeight: 'bold',
+        fontFamily: 'noto-sans',
+      }}>
+    User Details
+  </Typography>
+  {content}</div>
+
+}
+export default UserForm;

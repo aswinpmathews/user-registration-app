@@ -1,0 +1,22 @@
+{
+  "users": [
+    {
+      "id": "1832",
+      "name": "Aswin P Mathews",
+      "email": "aswin@gmail.com",
+      "occupation": "Intern",
+      "dob": "2003-09-26",
+      "address": "Nirayannoor",
+      "age": 21
+    },
+    {
+      "id": "5895",
+      "name": "Messi",
+      "email": "leomessi@outlook.com",
+      "occupation": "Athelete",
+      "dob": "1985-07-21",
+      "address": "Rosario",
+      "age": 40
+    }
+  ]
+}
