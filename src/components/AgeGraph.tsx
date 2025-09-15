@@ -4,6 +4,13 @@ import { Sheet, Typography, Stack, Box } from '@mui/joy';
 import { useEffect } from 'react';
 import { fetchUsers } from '../store/thunks/fetchUsers';
 
+const style = (barHeight : number) => ({
+                  width: 40,
+                  height: `${barHeight}px`,
+                  bgcolor: '#1a71d4ff',
+                  borderRadius: 1,
+                  position: 'relative',
+                })
 
 export default function AgeGraph() {
   const users = useSelector((state: RootState) => state.user.users);
@@ -66,13 +73,7 @@ export default function AgeGraph() {
           return (
             <Box key={age} sx={{ position: 'relative', textAlign: 'center', bgcolor: '#ffffffff', p: 1}}>
               <Box
-                sx={{
-                  width: 40,
-                  height: `${barHeight}px`,
-                  bgcolor: '#1a71d4ff',
-                  borderRadius: 1,
-                  position: 'relative',
-                }}
+                sx={{...style(barHeight)}}
               >
                 <Typography
                   
