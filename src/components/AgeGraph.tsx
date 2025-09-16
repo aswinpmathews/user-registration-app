@@ -2,8 +2,8 @@ import { useSelector,useDispatch  } from 'react-redux';
 import { RootState ,AppDispatch } from '../store/index';
 import { Sheet, Typography, Stack, Box } from '@mui/joy';
 import { useEffect } from 'react';
-import { fetchUsers } from '../store/thunks/fetchUsers';
-
+import { fetchUsers } from '../store/thunks/userThunks';
+import { useMemo } from 'react';
 const style = (barHeight : number) => ({
                   width: 40,
                   height: `${barHeight}px`,
@@ -23,22 +23,26 @@ export default function AgeGraph() {
     }
   }, [dispatch, users]);
 
-  const ageCount: Record<number, number> = {};
-  users.forEach((user) => {
-    if (typeof user.age === "number" && !isNaN(user.age)) {
-      ageCount[user.age] = (ageCount[user.age] || 0) + 1;
-    }
-  });
+    const data = useMemo(() => {
+    const ageCount = users.reduce<Record<number, number>>((acc, user) => {
+      if (typeof user.age === 'number' && !isNaN(user.age)) {
+        acc[user.age] = (acc[user.age] || 0) + 1;
+      }
+      return acc;
+    }, {});
 
-  const data = Object.entries(ageCount).map(([age, count]) => ({
-    age: Number(age),
-    count
-  }));
+    return Object.entries(ageCount)
+      .map(([age, count]) => ({ age: Number(age), count }))
+      .sort((a, b) => a.age - b.age);
+  }, [users]);
 
   const maxCount = Math.max(...data.map((d) => d.count), 1);
 
   return (
     <>
+    {users.length === 0 ? (<div>No user data available to display the graph.</div>):
+    
+    <div>
    <Typography level="h2" component="h1"
       sx={{
         justifyContent: 'center',
@@ -77,14 +81,7 @@ export default function AgeGraph() {
               >
                 <Typography
                   
-                  sx={{
-                    position: 'absolute',
-                    top: '10px',
-                    left: '50%',
-                    transform: 'translateX(-50%)',
-                    color: 'white',
-                    fontWeight: 'bold',
-                  }}
+                  sx={{position: 'absolute',top: '10px',left: '50%',transform: 'translateX(-50%)',color: 'white',fontWeight: 'bold',}}
                 >
                   {count}
                 </Typography>
@@ -103,6 +100,6 @@ export default function AgeGraph() {
         })}
       </Stack>
     </Sheet>
-        </>
-  );
+        </div>
+} </>);
 }
