@@ -1,8 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import UserDetail from "../../types/User";
-import { addUser } from "../thunks/addUser";
-import { fetchUsers } from "../thunks/fetchUsers";
-
+import { addUser, fetchUsers } from "../thunks/userThunks";
 interface UserState{
     users:UserDetail[],
     isLoading:boolean,
@@ -27,11 +25,10 @@ const userSlice = createSlice({
             })
             .addCase(addUser.fulfilled, (state, action) => {
                 state.isLoading = false;
-                // state.users.push(action.payload);  
+ 
             })
             .addCase(addUser.rejected, (state, action) => {
                 state.isLoading = false;
-                // state.error = action.error.message;
             })
             .addCase(fetchUsers.pending, (state) => {
                 state.isLoading = true;
@@ -43,7 +40,6 @@ const userSlice = createSlice({
             })
             .addCase(fetchUsers.rejected, (state, action) => {
                 state.isLoading = false;
-                // state.error = action.error.message;
             });
     },
 });

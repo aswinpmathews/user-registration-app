@@ -13,9 +13,13 @@ export function useThunk<Arg = void>(
     const runThunk = useCallback(
         (arg?: Arg) => {
             setIsLoading(true);
-            dispatch(thunk(arg as Arg))
-                .unwrap()
-                .catch((err: any) => setError(err?.message ?? "Unknown Error"))
+            setError(null);
+            return dispatch(thunk(arg as Arg))
+                .unwrap()              
+                .catch((err: any) => {
+                    setError(err.message ?? "Unknown Error")
+                    throw err.message;
+                })
                 .finally(() => setIsLoading(false));
         },
         [dispatch, thunk]
