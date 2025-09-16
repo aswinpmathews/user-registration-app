@@ -1,5 +1,5 @@
 import { useEffect } from "react"
-import { fetchUsers } from "../store/thunks/fetchUsers"
+import { fetchUsers } from "../store/thunks/userThunks"
 import { useThunk } from "../hooks/use-thunk"
 import { useSelector} from "react-redux"
 import { RootState } from "../store"
@@ -13,29 +13,19 @@ export default function UserList(){
     const users=useSelector((state:RootState)=>state.user.users)
     const navigate=useNavigate()
     useEffect(()=>{
-        doFetchUsers()
+        const loadUsers=async()=>{
+        try{
+            await doFetchUsers()
+        }catch(err){
+            console.log(err)
+        }
+        
+        }
+        loadUsers()
     },[doFetchUsers])
 
     console.log('All USers:',users)
 
-let content;
-      if (isLoadingUsers) {
-    content= (<div>
-        <Skeleton variant="text" level="h2" /> 
-        <Skeleton variant="text" level="h2" /> 
-        <Skeleton variant="text" level="h2" /> 
-        <Skeleton variant="text" level="h2" /> 
-        <Skeleton variant="text" level="h2" /> 
-        <Skeleton variant="text" level="h2" /> 
-
-    </div> );
-  } else if (loadingUsersError) {
-   content= <div>Error fetching data...</div>;
-  }else{
-    content=users.map((user)=>{
-        return <UserListItem key={user.id} user={user} />;
-    })
-  }
     return (
         <div style={{display:"flex",flexDirection:"column",gap:"30px",padding:"20px",justifyContent:"space-between",alignContent:"center"}}>
            <Typography level="h2" component="h1"
@@ -53,7 +43,22 @@ let content;
             <Button onClick={()=>navigate('/graph')}>
                 View Age Graph
             </Button>
-            {content}
+          {isLoadingUsers ? (
+    <div>
+        <Skeleton variant="text" level="h2" /> 
+        <Skeleton variant="text" level="h2" /> 
+        <Skeleton variant="text" level="h2" /> 
+        <Skeleton variant="text" level="h2" /> 
+        <Skeleton variant="text" level="h2" /> 
+        <Skeleton variant="text" level="h2" />
+    </div>
+) : loadingUsersError ? (
+    <div>Error fetching data...</div>
+) : (
+    <div>
+        {users.map((user) => <UserListItem key={user.id} user={user} />)}
+    </div>
+)}
         </div>
     );
 }
