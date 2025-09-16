@@ -28,112 +28,22 @@
       "age": 31
     },
     {
-      "id": "e139",
-      "name": "Peter",
-      "email": "peterparker@123.com",
-      "occupation": "Student",
-      "dob": "2004-10-16",
-      "address": "Queens",
-      "age": 20
-    },
-    {
-      "id": "af2e",
-      "name": "NFHBOTS",
-      "email": "nfhbots@gmail.com",
-      "occupation": "Company",
-      "dob": "1999-03-21",
-      "address": "Hyd",
-      "age": 26
-    },
-    {
-      "id": "53d8",
-      "name": "Hello",
-      "email": "hello@123.com",
-      "occupation": "Wave",
-      "dob": "1965-02-22",
-      "address": "EveryWhere",
-      "age": 60
-    },
-    {
-      "id": "99d6",
-      "name": "HIII",
-      "email": "hii@123.c",
-      "occupation": "Greet",
-      "dob": "1977-09-29",
-      "address": "Earth",
-      "age": 47
-    },
-    {
-      "id": "fcef",
-      "name": "Ranbir",
-      "email": "ranbir@123.c",
+      "id": "e618",
+      "name": "SRK",
+      "email": "srk@123.in",
       "occupation": "Actor",
-      "dob": "2001-09-21",
-      "address": "Mumbai",
-      "age": 23
-    },
-    {
-      "id": "c59a",
-      "name": "User",
-      "email": "u@g.c",
-      "occupation": "Not working",
-      "dob": "2001-11-11",
-      "address": "Somewhere",
-      "age": 23
-    },
-    {
-      "id": "007d",
-      "name": "Whoami",
-      "email": "wh@gm.c",
-      "occupation": "Filler",
-      "dob": "2004-03-31",
-      "address": "Idk really",
-      "age": 21
-    },
-    {
-      "id": "5cc3",
-      "name": "Sushant",
-      "email": "su@g.c",
-      "occupation": "Actor",
-      "dob": "2001-02-22",
-      "address": "Delhi",
-      "age": 24
-    },
-    {
-      "id": "2f18",
-      "name": "JEsus",
-      "email": "aswin@gmail.com",
-      "occupation": "God",
-      "dob": "2000-02-12",
-      "address": "Nazreth",
+      "dob": "1999-10-31",
+      "address": "Mannath",
       "age": 25
     },
     {
-      "id": "d4d3",
-      "name": "OOOC",
+      "id": "2072",
+      "name": "Mee",
       "email": "aswin@gmail.com",
-      "occupation": "OOC",
-      "dob": "2000-02-01",
-      "address": "Oooc",
-      "age": 25
-    },
-    {
-      "id": "e5ef",
-      "name": "Occ",
-      "email": "aswin@gmail.com",
-      "occupation": "ASw",
-      "dob": "2003-02-01",
-      "address": "NOOOO",
-      "age": 22
-    },
-    {
-      "id": "6740",
-      "name": "OOOC",
-      "email": "aswin@gmail.com",
-      "occupation": "OOC",
-      "dob": "2000-02-12",
-      "address": "NOOO",
-      "age": 25
+      "occupation": "NOOO",
+      "dob": "1990-02-09",
+      "address": "Here",
+      "age": 35
     }
   ]
 }
