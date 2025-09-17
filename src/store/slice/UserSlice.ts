@@ -1,6 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 import UserDetail from "../../types/User";
 import { addUser, fetchUsers } from "../thunks/userThunks";
+import { RootState } from '../store';
+
+
 interface UserState{
     users:UserDetail[],
     isLoading:boolean,
@@ -25,7 +28,8 @@ const userSlice = createSlice({
             })
             .addCase(addUser.fulfilled, (state, action) => {
                 state.isLoading = false;
- 
+                state.users.push(action.payload);
+                
             })
             .addCase(addUser.rejected, (state, action) => {
                 state.isLoading = false;
@@ -35,8 +39,12 @@ const userSlice = createSlice({
                 state.error = null;
             })
             .addCase(fetchUsers.fulfilled, (state, action) => {
-                state.isLoading = false;
-                state.users=action.payload;  
+                return{
+                      ...state,  
+                    isLoading : false,
+                    users: action.payload
+                }
+               
             })
             .addCase(fetchUsers.rejected, (state, action) => {
                 state.isLoading = false;
@@ -44,3 +52,6 @@ const userSlice = createSlice({
     },
 });
 export const usersReducer =userSlice.reducer
+export const selectUsers = (state: RootState) => state.user.users;
+export const selectIsLoading = (state: RootState) => state.user.isLoading;
+export const selectError = (state: RootState) => state.user.error;
