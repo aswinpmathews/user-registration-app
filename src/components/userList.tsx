@@ -2,15 +2,15 @@ import { useEffect } from "react"
 import { fetchUsers } from "../store/thunks/userThunks"
 import { useThunk } from "../hooks/use-thunk"
 import { useSelector} from "react-redux"
-import { RootState } from "../store"
 import UserListItem from "./UserListItem"
-import { Skeleton, Button ,Typography} from "@mui/joy"
+import { Skeleton, Button ,Typography, Box} from "@mui/joy"
 import { useNavigate } from "react-router-dom"
+import { selectUsers } from "../store/slice/UserSlice"
 
 
 export default function UserList(){
     const [doFetchUsers,isLoadingUsers,loadingUsersError]=useThunk(fetchUsers)
-    const users=useSelector((state:RootState)=>state.user.users)
+    const users=useSelector(selectUsers)
     const navigate=useNavigate()
     useEffect(()=>{
         const loadUsers=async()=>{
@@ -27,7 +27,7 @@ export default function UserList(){
     console.log('All USers:',users)
 
     return (
-        <div style={{display:"flex",flexDirection:"column",gap:"30px",padding:"20px",justifyContent:"space-between",alignContent:"center"}}>
+        <Box sx={{display:"flex",flexDirection:"column",gap:"30px",padding:"20px",justifyContent:"space-between",alignContent:"center"}}>
            <Typography level="h2" component="h1"
       sx={{
         justifyContent: 'center',
@@ -44,22 +44,19 @@ export default function UserList(){
                 View Age Graph
             </Button>
           {isLoadingUsers ? (
-    <div>
-        <Skeleton variant="text" level="h2" /> 
-        <Skeleton variant="text" level="h2" /> 
-        <Skeleton variant="text" level="h2" /> 
-        <Skeleton variant="text" level="h2" /> 
-        <Skeleton variant="text" level="h2" /> 
-        <Skeleton variant="text" level="h2" />
-    </div>
+   <Box>
+            {Array.from({ length: 6 }).map((_, index) => (
+                    <Skeleton key={index} variant="text" level="h2" sx={{ marginBottom: '16px' }} />
+                ))}
+            </Box>
 ) : loadingUsersError ? (
-    <div>Error fetching data...</div>
+    <Box>Error fetching data...</Box>
 ) : (
-    <div>
+    <Box>
         {users.map((user) => <UserListItem key={user.id} user={user} />)}
-    </div>
+    </Box>
 )}
-        </div>
+        </Box>
     );
 }
    
