@@ -1,7 +1,7 @@
 import  UserForm  from "./components/UserForm"
 import UserList from "./components/userList";
 import { Routes,Route } from "react-router-dom";
-import AgeGraph from "./components/Graph";
+import Graph from "./components/Graph";
 import AppLayout from "./components/AppLayout";
 
 function App(){
@@ -10,7 +10,7 @@ function App(){
     <Routes>
       <Route path="/" element={<UserForm/>}/>
       <Route path="/users" element={<UserList/>}/>
-      <Route path="/graph" element={<AgeGraph/>}/>
+      <Route path="/graph" element={<Graph/>}/>
     </Routes>  
 
   </AppLayout>
