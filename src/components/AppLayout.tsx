@@ -11,7 +11,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
     <CssVarsProvider>
       <Sheet
         sx={{
-          width: 1000,
+          width: 1200,
           mx: 'auto',
           my: 4,
           py: 3,
