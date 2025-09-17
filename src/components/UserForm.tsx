@@ -3,9 +3,8 @@ import { addUser } from '../store/thunks/userThunks'
 import UserDetail from "../types/User";
 import { useThunk } from "../hooks/use-thunk";
 import { useNavigate } from "react-router-dom";
-import { Typography,FormHelperText,FormControl,FormLabel ,Button} from "@mui/joy";
-import { fieldsConfig } from "../config/fieldsConfig";
-
+import { Typography,FormHelperText,FormControl,FormLabel ,Button, Box} from "@mui/joy";
+import { fieldsHelper } from "../helper/fieldsHelper";
 
 
 function UserForm(){
@@ -13,7 +12,8 @@ function UserForm(){
 
     const [doAddUser,isAddingUser,addUserError]=useThunk(addUser)
 
-    // const [doFetchUsers,]=useThunk(fetchUsers)
+    
+
     const [formData,setFormData]=useState<UserDetail >({
         name:'',
         email:'',
@@ -25,15 +25,15 @@ function UserForm(){
     const validate=()=>{
       const newErrors:{[key:string]:string}={};
       if(!formData.name.trim()) newErrors.name="Name is required";
-        else if(formData.name.length<3) newErrors.name="Name must be at least 3 characters";
-        else if(formData.name[0]!==formData.name[0].toUpperCase()) newErrors.name='The First Letter should be Capital'
+      else if(formData.name.length<3) newErrors.name="Name must be at least 3 characters";
+      else if(formData.name[0]!==formData.name[0].toUpperCase()) newErrors.name='The First Letter should be Capital'
       if(!formData.email.trim()) newErrors.email="Email is required";
-        else if(!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email="Invalid Email Format";
+      else if(!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email="Invalid Email Format";
       if(!formData.occupation.trim()) newErrors.occupation="Occupation is required";
-        else  if(formData.occupation.length<3) newErrors.occupation="Occupation must be at least 3 characters";
-        else if(formData.occupation[0]!==formData.occupation[0].toUpperCase()) newErrors.occupation='The First Letter should be Capital'
+      else  if(formData.occupation.length<3) newErrors.occupation="Occupation must be at least 3 characters";
+      else if(formData.occupation[0]!==formData.occupation[0].toUpperCase()) newErrors.occupation='The First Letter should be Capital'
       if(!formData.dob.trim()) newErrors.dob="Date of Birth is required";
-      else  if (new Date(formData.dob) > new Date()) newErrors.dob="Date of Birth cannot be in the future";
+      else if (new Date(formData.dob) > new Date()) newErrors.dob="Date of Birth cannot be in the future";
       else if(calculateAge(formData.dob)<18) newErrors.dob="Age must be at least 18 years";
       else if(calculateAge(formData.dob)>120) newErrors.dob="Age must be less than 120 years";  
       if(!formData.address.trim()) newErrors.address="Address is required";
@@ -61,7 +61,7 @@ function UserForm(){
         }))
  
     }
-
+  
 
   const handleSubmit =async (e: React.FormEvent) => {
     e.preventDefault();
@@ -77,19 +77,26 @@ function UserForm(){
           ...formData,
           age: calculateAge(formData.dob)  
         });
-        console.log("SUCCESS: User added. Navigating to user list.");
         setFormData({ name: '', email: '', occupation:'',dob:'',address:''}); 
         navigate('/users');
       }
         catch(err){
           console.error("FAILURE: Caught error in handleSubmit. Navigation prevented.");
-          console.log('Error adding user:', err);
         }
 
   };      
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleSubmit(e as React.FormEvent);
+    }
+  }
 
-  const userForm=<>
-  <div>
+  return <Box>
+
+  {isAddingUser ? <Box> <Typography>Adding User Details</Typography> </Box> 
+  : addUserError ? <Box><Typography>Error Adding User Details...</Typography></Box> 
+  :
+  <Box>
      
 <Typography level="h2" component="h1"
       sx={{
@@ -102,10 +109,10 @@ function UserForm(){
       }}>
     User Details
   </Typography>
-    <div>Please Enter Your Details</div>
-    <div>
-    <form onSubmit={handleSubmit} >
- {fieldsConfig.map(field=>(
+    <Box>Please Enter Your Details</Box>
+    <Box>
+<Box>
+ {fieldsHelper.map(field=>(
       <FormControl
                 key={field.name}
                 error={!!error[field.name]}
@@ -121,6 +128,7 @@ function UserForm(){
                   onChange={handleChange}
                   minRows ={field.minRows||undefined}
                   slotProps={field.slotProps}
+                  onKeyDown={handleKeyDown}
                 />
                 {error[field.name] && (
                   <FormHelperText>{error[field.name]}</FormHelperText>
@@ -130,16 +138,12 @@ function UserForm(){
                 )}
               </FormControl>
             ))}
-            <Button type="submit" variant="solid">Submit</Button>
+            <Button type="submit" variant="solid" onClick={handleSubmit}>Submit</Button>
 
-        </form>
-    </div>
-</div></>
-
-  return <div>
-
-  {isAddingUser ? <div>Adding User Details</div> : addUserError ? <div>Error Adding User Details...</div> :userForm}
-  </div>
+   </Box> </Box>
+  </Box>
+  }
+  </Box>
     
 }
 
