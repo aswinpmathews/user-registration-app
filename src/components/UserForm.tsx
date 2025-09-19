@@ -1,18 +1,20 @@
-import React, { useState } from "react";
+import React, {  useState } from "react";
 import { addUser } from '../store/thunks/userThunks'
 import UserDetail from "../types/User";
-import { useThunk } from "../hooks/use-thunk";
+
 import { useNavigate } from "react-router-dom";
 import { Typography,FormHelperText,FormControl,FormLabel ,Button, Box} from "@mui/joy";
 import { fieldsHelper } from "../helper/fieldsHelper";
+import { useSelector } from "react-redux";
+import {  selectIsLoading } from "../store/slice/UserSlice";
+import { useAppDispatch } from "../Custom/custom";
 
 
 function UserForm(){
   const navigate=useNavigate();
-
-    const [doAddUser,isAddingUser,addUserError]=useThunk(addUser)
-
-    
+  const dispatch=useAppDispatch()
+  const isAddingUser=useSelector(selectIsLoading)
+ const [addError,setAddError]=useState<string|null>(null)
 
     const [formData,setFormData]=useState<UserDetail >({
         name:'',
@@ -21,7 +23,7 @@ function UserForm(){
         dob:'',
         address:''
     })
-    const [error,setError]=useState<{[hey:string]:string}>({})
+    const [error,setError]=useState<Record<string,string>>({})
     const validate=()=>{
       const newErrors:{[key:string]:string}={};
       if(!formData.name.trim()) newErrors.name="Name is required";
@@ -72,16 +74,21 @@ function UserForm(){
   return;
   }
   try{
-        setError({});
-        await doAddUser({
+        setError({})
+
+        await dispatch(
+          addUser({
           ...formData,
-          age: calculateAge(formData.dob)  
-        });
-        setFormData({ name: '', email: '', occupation:'',dob:'',address:''}); 
+          age: calculateAge(formData.dob) , 
+        })
+      ).unwrap()
         navigate('/users');
       }
         catch(err){
-          console.error("FAILURE: Caught error in handleSubmit. Navigation prevented.");
+          if (typeof err ==='string'){
+            setAddError(err)
+          }          
+          console.error(`FAILURE: Caught error in handleSubmit. Navigation prevented.  ${err}`);
         }
 
   };      
@@ -94,7 +101,7 @@ function UserForm(){
   return <Box>
 
   {isAddingUser ? <Box> <Typography>Adding User Details</Typography> </Box> 
-  : addUserError ? <Box><Typography>Error Adding User Details...</Typography></Box> 
+  : addError ? <Box><Typography>Error Adding User Details...</Typography></Box> 
   :
   <Box>
      
