@@ -54,4 +54,4 @@ const userSlice = createSlice({
 export const usersReducer =userSlice.reducer
 export const selectUsers = (state: RootState) => state.user.users;
 export const selectIsLoading = (state: RootState) => state.user.isLoading;
-export const selectError = (state: RootState) => state.user.error;
+
