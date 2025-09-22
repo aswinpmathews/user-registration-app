@@ -22,10 +22,9 @@ export default function UserList(){
 
         dispatch(fetchUsers())
         .unwrap()
-        .catch((err)=>{
-            if(typeof err==='string')
+        .catch((err:string)=>{
             setLoadError(err)
-            console.log(err)
+            console.error(err)
         }
         )
     

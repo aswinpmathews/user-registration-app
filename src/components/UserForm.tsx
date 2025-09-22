@@ -5,15 +5,14 @@ import UserDetail from "../types/User";
 import { useNavigate } from "react-router-dom";
 import { Typography,FormHelperText,FormControl,FormLabel ,Button, Box} from "@mui/joy";
 import { fieldsHelper } from "../helper/fieldsHelper";
-import { useSelector } from "react-redux";
 import {  selectIsLoading } from "../store/slice/UserSlice";
-import { useAppDispatch } from "../Custom/custom";
+import { useAppDispatch ,useAppSelector} from "../Custom/custom";
 
 
 function UserForm(){
   const navigate=useNavigate();
   const dispatch=useAppDispatch()
-  const isAddingUser=useSelector(selectIsLoading)
+  const isAddingUser=useAppSelector(selectIsLoading)
  const [addError,setAddError]=useState<string|null>(null)
 
     const [formData,setFormData]=useState<UserDetail >({
@@ -25,7 +24,7 @@ function UserForm(){
     })
     const [error,setError]=useState<Record<string,string>>({})
     const validate=()=>{
-      const newErrors:{[key:string]:string}={};
+      const newErrors:Record<string,string>={};
       if(!formData.name.trim()) newErrors.name="Name is required";
       else if(formData.name.length<3) newErrors.name="Name must be at least 3 characters";
       else if(formData.name[0]!==formData.name[0].toUpperCase()) newErrors.name='The First Letter should be Capital'
@@ -73,7 +72,7 @@ function UserForm(){
   setError(validationErrors);
   return;
   }
-  try{
+
         setError({})
 
         await dispatch(
@@ -82,14 +81,15 @@ function UserForm(){
           age: calculateAge(formData.dob) , 
         })
       ).unwrap()
+      .then(()=>{
         navigate('/users');
-      }
-        catch(err){
-          if (typeof err ==='string'){
+      })
+      .catch((err : string)=>{
+
             setAddError(err)
-          }          
+               
           console.error(`FAILURE: Caught error in handleSubmit. Navigation prevented.  ${err}`);
-        }
+        })
 
   };      
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -117,7 +117,7 @@ function UserForm(){
     User Details
   </Typography>
     <Box>Please Enter Your Details</Box>
-    <Box>
+    
 <Box>
  {fieldsHelper.map(field=>(
       <FormControl
@@ -147,8 +147,8 @@ function UserForm(){
             ))}
             <Button type="submit" variant="solid" onClick={handleSubmit}>Submit</Button>
 
-   </Box> </Box>
-  </Box>
+   </Box> 
+   </Box>
   }
   </Box>
     

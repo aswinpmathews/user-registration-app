@@ -1,18 +1,17 @@
-import { useSelector,useDispatch  } from 'react-redux';
-import { AppDispatch } from '../store/store';
 import { Sheet, Typography, Stack, Box ,Checkbox } from '@mui/joy';
 import { useEffect ,useState} from 'react';
 import { fetchUsers } from '../store/thunks/userThunks';
 import { useMemo } from 'react';
 import { style,countStyle,titleStyle,sheetStyle } from '../style/Graphstyle';
 import { selectUsers } from '../store/slice/UserSlice';
+import { useAppDispatch ,useAppSelector} from '../Custom/custom';
 
 export default function Graph() {
 const [selectedGraph, setSelectedGraph] = useState<'age' | 'occupation'>('age');
 
-  const users = useSelector(selectUsers);
+  const users = useAppSelector(selectUsers);
 
-  const dispatch= useDispatch<AppDispatch>();
+  const dispatch= useAppDispatch();
 
   useEffect(() => {
     if (!users || users.length === 0) {
@@ -54,15 +53,13 @@ const data = useMemo(() => {
       
       {graphTitle}
   </Typography>
-    {users.length === 0 ? (<div>Error Fetching Data</div>):
+    {users.length === 0 ? (<Box>Error Fetching Data</Box>):
     
     <Stack>  
     <Checkbox label="Age" variant="solid" checked={isAgeGraph} onChange={() => setSelectedGraph('age')}/>
             
     <Checkbox label="Occupation" variant="solid" checked={!isAgeGraph} onChange={() => setSelectedGraph('occupation')}/>
 
-  
-    
     <Sheet
       variant="outlined"
       sx={{...sheetStyle}}
