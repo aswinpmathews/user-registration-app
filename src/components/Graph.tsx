@@ -10,7 +10,6 @@ export default function Graph() {
 const [selectedGraph, setSelectedGraph] = useState<'age' | 'occupation'>('age');
 
   const users = useAppSelector(selectUsers);
-
   const dispatch= useAppDispatch();
 
   useEffect(() => {
@@ -39,15 +38,13 @@ const data = useMemo(() => {
       });
   }, [users, selectedGraph]);
 
-
-
   const isAgeGraph :boolean= selectedGraph === 'age';
   const graphTitle:string = isAgeGraph ? 'Age Distribution Graph' : 'Occupation Distribution Graph';
   const maxCount:number = Math.max(...data.map((d) => d.count), 1);
   
   return (
     <Box> <Typography level="h2" component="h1"
-      sx={{...titleStyle}}>
+      sx={titleStyle}>
 
 
       
@@ -56,13 +53,12 @@ const data = useMemo(() => {
     {users.length === 0 ? (<Box>Error Fetching Data</Box>):
     
     <Stack>  
-    <Checkbox label="Age" variant="solid" checked={isAgeGraph} onChange={() => setSelectedGraph('age')}/>
-            
+    <Checkbox label="Age" variant="solid" checked={isAgeGraph} onChange={() => setSelectedGraph('age')}/>    
     <Checkbox label="Occupation" variant="solid" checked={!isAgeGraph} onChange={() => setSelectedGraph('occupation')}/>
 
     <Sheet
       variant="outlined"
-      sx={{...sheetStyle}}
+      sx={sheetStyle}
     >
       <Stack  direction="row" spacing={2} alignItems="flex-end" justifyContent="center">
         {data.map(({ label, count }) => {
@@ -71,11 +67,11 @@ const data = useMemo(() => {
           return (
             <Box key={label} sx={{ position: 'relative', textAlign: 'center', bgcolor: '#ffffffff', p: 1}}>
               <Box
-                sx={{...style(barHeight)}}
+                sx={style(barHeight)}
               >
                 <Typography
                   
-                  sx={{...countStyle}}
+                  sx={countStyle}
                 >
                   {count}
                 </Typography>
