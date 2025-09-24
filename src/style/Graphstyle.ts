@@ -1,10 +1,17 @@
-export const style = (barHeight : number) => ({
-                  width: 40,
-                  height: `${barHeight*2}px`,
-                  bgcolor: '#1a71d4ff',
-                  borderRadius: 5,
-                  position: 'relative',
-                })
-export const countStyle = {position: 'absolute',top: '10px',left: '50%',transform: 'translateX(-50%)',color: 'white',fontWeight: 'bold'}
 export const titleStyle = {justifyContent: 'center',display: 'flex',mb: 4,fontSize: '2rem',fontWeight: 'bold',fontFamily: 'noto-sans'}
-export const sheetStyle = {padding: 10,borderRadius: 'md',boxShadow: 'md',maxWidth: 600,margin: 'auto',mt: 5,mb: 5,}
+export const COLORS = [
+    "#8884d8",
+    "#82ca9d",
+    "#ffc658",
+    "#ff8042",
+    "#8dd1e1",
+    "#81aa5cff",
+    "#374209ff",
+    "#d46d7eff",
+    "#ce0045ff",
+    "#1a71d4ff",
+    "#f44336",
+    "#00bcd4",
+    "#ffeb3b",
+    "#4caf50",
+  ];
