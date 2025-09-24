@@ -8,8 +8,8 @@ function App(){
   return(
   <AppLayout>
     <Routes>
-      <Route path="/" element={<UserForm/>}/>
-      <Route path="/users" element={<UserList/>}/>
+      <Route path="/" element={<UserList/>}/>
+      <Route path="/add" element={<UserForm/>}/>
       <Route path="/graph" element={<Graph/>}/>
     </Routes>  
 
