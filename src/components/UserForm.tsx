@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { addUser } from "../store/thunks/userThunks";
+import { addUser, editUser } from "../store/thunks/userThunks";
 import UserDetail from "../types/User";
 import { useNavigate } from "react-router-dom";
 import {
@@ -12,18 +12,19 @@ import {
 } from "@mui/joy";
 import { fieldsHelper } from "../helper/fieldsHelper";
 import { selectIsLoading } from "../store/slice/userSlice";
-import { useAppDispatch, useAppSelector } from "../Custom/custom";
+import { useAppDispatch, useAppSelector } from "../hooks/custom";
 import { IoHome } from "react-icons/io5";
-
-
+import {useLocation} from "react-router-dom";
 
 function UserForm() {
+  const location = useLocation();
+  const editingUser = location.state?.user as UserDetail | undefined;
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const isAddingUser = useAppSelector(selectIsLoading);
   const [addError, setAddError] = useState<string | null>(null);
 
-  const [formData, setFormData] = useState<UserDetail>({
+  const [formData, setFormData] = useState<UserDetail>(editingUser??{
     name: "",
     email: "",
     occupation: "",
@@ -57,11 +58,15 @@ function UserForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await dispatch(
-      addUser({
+    await dispatch(editingUser?
+       editUser({
+         ...formData,
+         age: calculateAge(formData.dob),
+       })
+     :  addUser({
         ...formData,
-        age: calculateAge(formData.dob),
-      })
+         age: calculateAge(formData.dob),
+       })
     )
       .unwrap()
       .then(() => {
@@ -69,10 +74,7 @@ function UserForm() {
       })
       .catch((err: string) => {
         setAddError(err);
-
-        console.error(
-          `FAILURE: Caught error in handleSubmit. Navigation prevented.  ${err}`
-        );
+        console.error(err);
       });
   };
 
@@ -88,7 +90,9 @@ function UserForm() {
         </Box>
       ) : (
         <Box>
-          <Button startDecorator={<IoHome />} onClick={()=>navigate('/')}>Home</Button>
+          <Button startDecorator={<IoHome />} onClick={() => navigate("/")}>
+            Home
+          </Button>
           <Typography
             level="h2"
             component="h1"
@@ -104,7 +108,6 @@ function UserForm() {
             USER FORM
           </Typography>
           <Box>Please Enter Your Details</Box>
-
           <form onSubmit={handleSubmit}>
             {fieldsHelper.map((field) => (
               <FormControl key={field.name} required sx={{ mb: 2 }}>
@@ -123,7 +126,7 @@ function UserForm() {
                 )}
               </FormControl>
             ))}
-            <Button type="submit" variant="solid">
+            <Button type="submit" variant="solid" endDecorator={">"}>
               Submit
             </Button>
           </form>

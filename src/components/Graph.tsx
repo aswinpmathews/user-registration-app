@@ -1,10 +1,10 @@
-import { Typography, Stack, Box, Checkbox, Button } from "@mui/joy";
+import { Typography, Stack, Box, Checkbox, Button, Skeleton } from "@mui/joy";
 import { useEffect, useState } from "react";
 import { fetchUsers } from "../store/thunks/userThunks";
 import { useMemo } from "react";
-import { titleStyle, COLORS } from "../style/Graphstyle";
-import { selectUsers } from "../store/slice/userSlice";
-import { useAppDispatch, useAppSelector } from "../Custom/custom";
+import { titleStyle, COLORS } from "../style/graphStyle";
+import { selectUsers, selectIsLoading } from "../store/slice/userSlice";
+import { useAppDispatch, useAppSelector } from "../hooks/custom";
 import { useNavigate } from "react-router-dom";
 import {
   LineChart,
@@ -24,19 +24,22 @@ export default function Graph() {
   const [selectedGraph, setSelectedGraph] = useState<"age" | "occupation">(
     "age"
   );
+  const [error, setError] = useState<string | null>(null);
 
   const navigate = useNavigate();
 
   const users = useAppSelector(selectUsers);
+  const isLoadingUsers = useAppSelector(selectIsLoading);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    if (!users || users.length === 0) {
-      dispatch(fetchUsers()).catch((err) => {
-        console.log(err);
-      });
-    }
-  }, [dispatch, users]);
+      dispatch(fetchUsers())
+        .unwrap()
+        .catch((err) => {
+          setError(err);
+          console.log(err);
+        });
+  }, [dispatch]);
 
   const data = useMemo(() => {
     const counts = users.reduce<Record<string, number>>((acc, user) => {
@@ -68,8 +71,30 @@ export default function Graph() {
         {graphTitle}
       </Typography>
 
-      {users.length === 0 ? (
-        <Box>Error Fetching Data</Box>
+      {isLoadingUsers ? (
+        <Box>
+          {Array.from({ length: 6 }).map((_, index) => (
+            <Skeleton
+              key={index}
+              variant="text"
+              level="h2"
+              sx={{ marginBottom: "16px" }}
+            />
+          ))}
+        </Box>
+      ) : error !== null ? (
+        <Box>Error Fetching Data...</Box>
+      ) : users.length === 0 ? (
+        <Typography
+          sx={{
+            justifyContent: "center",
+            fontFamily: "not-sans",
+            fontWeight: "bold",
+            display: "flex",
+          }}
+        >
+          No users found. Please add some users.
+        </Typography>
       ) : (
         <Stack>
           <Checkbox
@@ -87,7 +112,6 @@ export default function Graph() {
           <Box
             flexDirection={"column"}
             display="flex"
-            gap={5}
             justifyContent={"space-between"}
           >
             {isAgeGraph ? (
@@ -106,7 +130,7 @@ export default function Graph() {
                   >
                     <CartesianGrid />
                     <XAxis dataKey="label" />
-                    <YAxis />
+                    <YAxis allowDecimals={false} />
                     <Tooltip />
                     <Line
                       type="monotone"
@@ -120,23 +144,23 @@ export default function Graph() {
               </Box>
             ) : (
               <ResponsiveContainer width="100%" aspect={2}>
-                <PieChart width={400} height={400}>
+                <PieChart width={500} height={500}>
                   <Pie
                     data={data}
                     dataKey="count"
                     nameKey="label"
                     cx="50%"
                     cy="50%"
-                    outerRadius={120}
-                    label
+                    outerRadius={180}
+                    label={({ name, value }) => `${name}: ${value}`}
                   >
-                  {data.map((entry, index) => (
-                    <Cell
-                      key={`cell-${index}`}
-                      fill={COLORS[index % COLORS.length]}
-                    />
-                  ))}
-                  </Pie >
+                    {data.map((entry, index) => (
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={COLORS[index % COLORS.length]}
+                      />
+                    ))}
+                  </Pie>
                   <Tooltip />
                 </PieChart>
               </ResponsiveContainer>

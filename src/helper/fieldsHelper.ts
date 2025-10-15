@@ -1,4 +1,4 @@
-import { Input, Textarea } from "@mui/joy";
+import { Input, Textarea} from "@mui/joy";
 
 import { ComponentType } from "react";
 
@@ -9,7 +9,9 @@ interface FieldHelper {
   placeholder?: string;
   component: ComponentType<any>;
   minRows?: number;
-  slotProps?: object;
+  slotProps?: {
+  input?: React.InputHTMLAttributes<HTMLInputElement>;
+};
   helper?: string;
 }
 
@@ -23,7 +25,6 @@ export const fieldsHelper: FieldHelper[] = [
     slotProps: {
       input: {
         pattern: "^[A-Z][A-Za-z ]+$",
-        autoComplete: "off",
         title: "First Letter Should be Capital. Name should only contain letters and spaces",
       },
     },
@@ -50,7 +51,7 @@ export const fieldsHelper: FieldHelper[] = [
     component: Input,
     slotProps: {
       input: {
-        min: "1900-01-01",
+        min: "1940-01-01",
         max: new Date().toISOString().split("T")[0],
       },
     },
@@ -75,6 +76,12 @@ export const fieldsHelper: FieldHelper[] = [
     type: "text",
     placeholder: "Enter full address",
     component: Textarea,
+      slotProps: {
+      input: {
+        pattern: "^[A-Za-z0-9 ]+$",
+        title: "Address can contain letters,numbers and spaces",
+      },
+    },
     minRows: 3,
   },
 ];
