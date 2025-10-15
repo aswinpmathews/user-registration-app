@@ -1,33 +1,19 @@
 import  UserForm  from "./components/UserForm"
-import { CssVarsProvider } from '@mui/joy/styles';
-import Sheet from '@mui/joy/Sheet';
-import UserList from "./components/userList";
+import UserList from "./components/UserList";
 import { Routes,Route } from "react-router-dom";
-import AgeGraph from "./components/AgeGraph";
+import Graph from "./components/Graph";
+import AppLayout from "./components/AppLayout";
 
 function App(){
   return(
-    <CssVarsProvider>
-    <Sheet
-    sx={{
-    width: 1000,
-    mx: 'auto', 
-    my: 4, 
-    py: 3, 
-    px: 2, 
-    display: 'flex',
-    flexDirection: 'column',
-    gap: 6,
-    borderRadius: 'sm',
-    boxShadow: 'md',
-  }}>
+  <AppLayout>
     <Routes>
-      <Route path="/" element={<UserForm/>}/>
-      <Route path="/users" element={<UserList/>}/>
-      <Route path="/graph" element={<AgeGraph/>}/>
+      <Route path="/" element={<UserList/>}/>
+      <Route path="/add" element={<UserForm/>}/>
+      <Route path="/graph" element={<Graph/>}/>
     </Routes>  
-    </Sheet>
-    </CssVarsProvider>
+
+  </AppLayout>
   )
 }
 export default App;

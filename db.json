@@ -17,6 +17,33 @@
       "dob": "1985-07-21",
       "address": "Rosario",
       "age": 40
+    },
+    {
+      "id": "3a0d",
+      "name": "Charlie",
+      "email": "charlie@gmail.com",
+      "occupation": "Ninja",
+      "dob": "1993-09-21",
+      "address": "Holy Grills\n",
+      "age": 31
+    },
+    {
+      "id": "e618",
+      "name": "SRK",
+      "email": "srk@123.in",
+      "occupation": "Actor",
+      "dob": "1999-10-31",
+      "address": "Mannath",
+      "age": 25
+    },
+    {
+      "id": "2072",
+      "name": "Mee",
+      "email": "aswin@gmail.com",
+      "occupation": "NOOO",
+      "dob": "1990-02-09",
+      "address": "Here",
+      "age": 35
     }
   ]
 }

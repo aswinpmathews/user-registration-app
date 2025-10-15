@@ -1,11 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { usersReducer } from "./slice/UserSlice";
+import { usersReducer } from "./slice/userSlice";
 
 export const store =configureStore({
     reducer:{
         user:usersReducer,
     }
 })
-export * from './thunks/addUser'
+export type AppStore=typeof store;
 export type RootState=ReturnType<typeof store.getState>
 export type AppDispatch = typeof store.dispatch;
